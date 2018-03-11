@@ -1,21 +1,44 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import "./Square.css";
+import { move } from "../actions/game";
 import { connect } from "react-redux";
 
-class Square extends PureComponent {
+export class Square extends PureComponent {
   static propTypes = {
     value: PropTypes.number.isRequired,
-    row: PropTypes.arrayOf.isRequired,
-    col: PropTypes.arrayOf.isRequired
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    makeMove: PropTypes.func.isRequired,
+    locked: PropTypes.bool.isRequired,
+    dupe: PropTypes.bool.isRequired
   };
 
-  render() {
-    const value = this.props;
+  handleClick = () => {
+    const { x, y, makeMove, locked } = this.props;
+    if (locked) {
+      makeMove(x, y);
+    }
+  };
 
-    return <div className={`Square fill-${value || 0}`} />;
+  classNames() {
+    const { value, locked, dupe } = this.props;
+
+    let classnames = ["Square"];
+    classnames.push(`fill-${value || 0}`);
+    if (locked) classnames.push("locked");
+    if (dupe) classnames.push("dupe");
+
+    return classnames.join(" ");
+  }
+
+  render() {
+    return <div className={this.classNames()} handleClick={this.handleClick} />;
   }
 }
 
+const mapStateToProps = ({ locked }, { x, y }) => ({
+  locked: locked.filter(l => l[0] === y && l[1] === x).length > 0
+});
 
-export default Square
+export default connect(mapStateToProps, { makeMove: move })(Square);
