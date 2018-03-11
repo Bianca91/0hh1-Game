@@ -5,6 +5,12 @@
   min-height: 75px;
   max-height: 75px;
   border: 4px solid #eee;
+  transition: all ease-in-out .6s;
+  cursor: pointer;
+}
+
+.Square.wrong {
+  border-color: #F8E71C;
 }
 
 .Square.locked:hover::after {
@@ -35,7 +41,6 @@
   background-color: #2F619B;
 }
 
-.classNames.dupe {
-  background-color: #D0021B;
-
+.Square.dupe {
+  border-color: #F8E71C;
 }
